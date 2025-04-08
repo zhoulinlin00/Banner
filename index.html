@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Outage Banner</title>
-    <meta http-equiv="refresh" content="0;url=tableau_outage_banner.html">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -40,11 +39,25 @@
     <div class="container">
         <h1>Data Outage Banner</h1>
         <p>Redirecting to the Data Outage Banner...</p>
-        <p>If you are not redirected automatically, <a href="tableau_outage_banner.html">click here</a>.</p>
+        <p>If you are not redirected automatically, <a href="tableau_outage_banner.html" id="redirect-link">click here</a>.</p>
     </div>
     <script>
-        // Ensure redirection happens
-        window.location.href = "tableau_outage_banner.html";
+        // Get the current URL with all parameters
+        const currentUrl = window.location.href;
+        
+        // Extract the base URL and parameters
+        const urlParts = currentUrl.split('?');
+        const baseUrl = urlParts[0];
+        const params = urlParts.length > 1 ? '?' + urlParts[1] : '';
+        
+        // Create the redirect URL with parameters
+        const redirectUrl = baseUrl.replace(/\/$/, '') + '/tableau_outage_banner.html' + params;
+        
+        // Update the link href
+        document.getElementById('redirect-link').href = redirectUrl;
+        
+        // Redirect to the banner with parameters
+        window.location.href = redirectUrl;
     </script>
 </body>
 </html> 
