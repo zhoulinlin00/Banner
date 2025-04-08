@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -380,16 +380,9 @@
                 day: 'numeric'
             });
             
-            // Create banner data
-            const bannerData = {
-                customers: customers,
-                updateDate: formattedDate
-            };
-            
-            // Generate the URL with the data encoded
+            // Generate the URL
             const baseUrl = window.location.href.replace('analyst_input_form.html', 'tableau_outage_banner.html');
-            const encodedData = encodeURIComponent(JSON.stringify(bannerData));
-            const bannerUrl = `${baseUrl}?action=update&data=${encodedData}`;
+            const bannerUrl = `${baseUrl}?customers=${encodeURIComponent(JSON.stringify(customers))}&updateDate=${encodeURIComponent(formattedDate)}`;
             
             // Display the result
             document.getElementById('banner-url').textContent = bannerUrl;
@@ -434,15 +427,8 @@
                     day: 'numeric'
                 });
                 
-                // Create banner data
-                const bannerData = {
-                    customers: updatedCustomers,
-                    updateDate: formattedDate
-                };
-                
-                // Generate the URL with the data encoded
-                const encodedData = encodeURIComponent(JSON.stringify(bannerData));
-                const updatedBannerUrl = `${baseUrl}?action=update&data=${encodedData}`;
+                // Generate the URL
+                const updatedBannerUrl = `${baseUrl}?customers=${encodeURIComponent(JSON.stringify(updatedCustomers))}&updateDate=${encodeURIComponent(formattedDate)}`;
                 
                 // Display the result
                 document.getElementById('updated-banner-url').textContent = updatedBannerUrl;
