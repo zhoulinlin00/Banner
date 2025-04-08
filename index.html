@@ -42,22 +42,28 @@
         <p>If you are not redirected automatically, <a href="tableau_outage_banner.html" id="redirect-link">click here</a>.</p>
     </div>
     <script>
-        // Get the current URL with all parameters
-        const currentUrl = window.location.href;
+        // Check if there are URL parameters
+        const hasParams = window.location.search.length > 0;
         
-        // Extract the base URL and parameters
-        const urlParts = currentUrl.split('?');
-        const baseUrl = urlParts[0];
-        const params = urlParts.length > 1 ? '?' + urlParts[1] : '';
-        
-        // Create the redirect URL with parameters
-        const redirectUrl = baseUrl.replace(/\/$/, '') + '/tableau_outage_banner.html' + params;
-        
-        // Update the link href
-        document.getElementById('redirect-link').href = redirectUrl;
-        
-        // Redirect to the banner with parameters
-        window.location.href = redirectUrl;
+        if (hasParams) {
+            // If there are parameters, redirect to tableau_outage_banner.html with the parameters
+            const currentUrl = window.location.href;
+            const urlParts = currentUrl.split('?');
+            const baseUrl = urlParts[0];
+            const params = urlParts.length > 1 ? '?' + urlParts[1] : '';
+            
+            // Create the redirect URL with parameters
+            const redirectUrl = baseUrl.replace(/\/$/, '') + '/tableau_outage_banner.html' + params;
+            
+            // Update the link href
+            document.getElementById('redirect-link').href = redirectUrl;
+            
+            // Redirect to the banner with parameters
+            window.location.href = redirectUrl;
+        } else {
+            // If there are no parameters, just redirect to tableau_outage_banner.html
+            window.location.href = "tableau_outage_banner.html";
+        }
     </script>
 </body>
 </html> 
