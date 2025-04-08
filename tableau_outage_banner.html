@@ -3,202 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Outage Banner</title>
+    <title>Data Availability Notice</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .outage-notice {
+            background-color: #fff3e0;
+            border: 1px solid #ffe0b2;
+            padding: 15px;
+            margin: 0;
+        }
+        .outage-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .outage-icon {
+            margin-right: 10px;
+            color: #e67e22;
+        }
+        .outage-title {
+            color: #e67e22;
+            font-weight: bold;
+            margin: 0;
+        }
+        .customer-list {
+            margin: 10px 0;
+        }
+        .customer-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 4px;
+        }
+        .customer-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .customer-period {
+            color: #e67e22;
+            margin-left: 10px;
+        }
+        .customer-kpi {
+            color: #e67e22;
+            margin-left: 10px;
+        }
+        .customer-reason {
+            margin-top: 5px;
+            color: #666;
+        }
+        .last-updated {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-<div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 800px; margin: 20px auto; padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);">
-    <div style="color: #e67e22; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="#e67e22">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-        </svg>
-        <h1 style="margin: 0; font-size: 24px; color: #2c3e50;">Data Availability Notice</h1>
-    </div>
-    
-    <div id="outage-message" style="color: #34495e; line-height: 1.6; margin-bottom: 20px;">
-        We wanted to inform you that some data is currently delayed. Our team is working diligently to resolve these issues and ensure all data is available as soon as possible.
-    </div>
-
-    <div id="customer-outages" style="background-color: #fff5e6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-        <h2 style="margin-top: 0;">Affected Customers:</h2>
-        <div id="customer-list">
-            <!-- Customer items will be inserted here -->
+    <div id="outageNotice" class="outage-notice" style="display: none;">
+        <div class="outage-header">
+            <svg class="outage-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L1 21H23L12 2ZM12 17C11.45 17 11 16.55 11 16C11 15.45 11.45 15 12 15C12.55 15 13 15.45 13 16C13 16.55 12.55 17 12 17ZM13 13H11V7H13V13Z" fill="#e67e22"/>
+            </svg>
+            <h2 class="outage-title">Data Availability Notice</h2>
         </div>
+        <div id="customerList" class="customer-list"></div>
+        <div id="lastUpdated" class="last-updated"></div>
     </div>
 
-    <!-- Subscription Form -->
-    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e9ecef;">
-        <h3 style="margin-top: 0; color: #2c3e50;">Stay Updated</h3>
-        <p style="color: #6c757d; margin-bottom: 15px;">Subscribe to receive notifications when data becomes available.</p>
-        <form id="subscription-form" style="display: flex; gap: 10px;">
-            <input type="email" id="email-input" placeholder="Enter your email address" required 
-                   style="flex: 1; padding: 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
-            <button type="submit" 
-                    style="background-color: #e67e22; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: 500;">
-                Subscribe
-            </button>
-        </form>
-        <div id="subscription-message" style="margin-top: 10px; font-size: 14px; display: none;"></div>
-    </div>
+    <script>
+        function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        }
 
-    <div id="last-updated" style="font-style: italic; color: #7f8c8d; margin-top: 20px; font-size: 0.9em;">
-        Last Updated: March 29, 2025
-    </div>
-
-    <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #eee; color: #7f8c8d; font-size: 0.9em;">
-        If you have any questions or concerns, please don't hesitate to reach out to our support team.
-    </div>
-</div>
-
-<script>
-    // Function to get URL parameters
-    function getUrlParams() {
-        const params = new URLSearchParams(window.location.search);
-        return {
-            customers: params.get('customers') ? JSON.parse(params.get('customers')) : null,
-            updateDate: params.get('updateDate'),
-            action: params.get('action'),
-            data: params.get('data')
-        };
-    }
-
-    // Function to save data to local storage
-    function saveToLocalStorage(data) {
-        localStorage.setItem('outageBannerData', JSON.stringify(data));
-    }
-
-    // Function to get data from local storage
-    function getFromLocalStorage() {
-        const data = localStorage.getItem('outageBannerData');
-        return data ? JSON.parse(data) : null;
-    }
-
-    // Function to update the banner content
-    function updateBannerContent() {
-        const params = getUrlParams();
-        let bannerData;
-        
-        // Check if we're updating the data
-        if (params.action === 'update' && params.data) {
-            try {
-                // Decode and parse the data
-                const decodedData = decodeURIComponent(params.data);
-                bannerData = JSON.parse(decodedData);
-                
-                // Save to local storage
-                saveToLocalStorage(bannerData);
-                
-                // Remove the query parameters to keep the URL clean
-                if (window.history && window.history.replaceState) {
-                    const newUrl = window.location.pathname;
-                    window.history.replaceState({}, document.title, newUrl);
+        function updateBannerContent() {
+            const customersParam = getUrlParameter('customers');
+            const updateDate = getUrlParameter('updateDate') || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+            
+            if (customersParam) {
+                try {
+                    const customers = JSON.parse(customersParam);
+                    const customerList = document.getElementById('customerList');
+                    customerList.innerHTML = '';
+                    
+                    customers.forEach(customer => {
+                        const customerDiv = document.createElement('div');
+                        customerDiv.className = 'customer-item';
+                        customerDiv.innerHTML = `
+                            <span class="customer-name">${customer.name}</span>
+                            <span class="customer-period">${customer.period}</span>
+                            <span class="customer-kpi">${customer.kpi}</span>
+                            <div class="customer-reason">${customer.reason}</div>
+                        `;
+                        customerList.appendChild(customerDiv);
+                    });
+                    
+                    document.getElementById('lastUpdated').textContent = `Last Updated: ${updateDate}`;
+                    document.getElementById('outageNotice').style.display = 'block';
+                } catch (e) {
+                    console.error('Error parsing customer data:', e);
                 }
-            } catch (e) {
-                console.error('Error parsing update data:', e);
+            } else {
+                document.getElementById('outageNotice').style.display = 'none';
             }
         }
-        
-        // If we don't have data from the URL, try to get it from local storage
-        if (!bannerData) {
-            bannerData = getFromLocalStorage();
-        }
-        
-        // If we still don't have data, use the URL parameters
-        if (!bannerData && params.customers) {
-            bannerData = {
-                customers: params.customers,
-                updateDate: params.updateDate
-            };
-            
-            // Save to local storage for future use
-            saveToLocalStorage(bannerData);
-        }
-        
-        // Update the banner with the data
-        if (bannerData && bannerData.customers && bannerData.customers.length > 0) {
-            const customerListElement = document.getElementById('customer-list');
-            customerListElement.innerHTML = '';
-            
-            bannerData.customers.forEach((customer, index) => {
-                const customerDiv = document.createElement('div');
-                customerDiv.className = 'customer-outage';
-                customerDiv.style.marginBottom = '15px';
-                customerDiv.style.paddingBottom = '15px';
-                customerDiv.style.borderBottom = index < bannerData.customers.length - 1 ? '1px solid #ffe0b2' : 'none';
-                
-                // Customer name
-                const nameDiv = document.createElement('div');
-                nameDiv.style.fontWeight = 'bold';
-                nameDiv.style.fontSize = '16px';
-                nameDiv.style.marginBottom = '10px';
-                nameDiv.textContent = customer.name;
-                
-                // Period and KPI badges
-                const badgesDiv = document.createElement('div');
-                badgesDiv.style.display = 'flex';
-                badgesDiv.style.gap = '10px';
-                badgesDiv.style.marginBottom = '10px';
-                
-                // Period badge (orange)
-                const periodBadge = document.createElement('span');
-                periodBadge.style.backgroundColor = '#e67e22';
-                periodBadge.style.color = 'white';
-                periodBadge.style.padding = '4px 8px';
-                periodBadge.style.borderRadius = '4px';
-                periodBadge.style.fontSize = '14px';
-                periodBadge.style.fontWeight = 'bold';
-                periodBadge.textContent = customer.period;
-                
-                // KPI badge (blue)
-                const kpiBadge = document.createElement('span');
-                kpiBadge.style.backgroundColor = '#3498db';
-                kpiBadge.style.color = 'white';
-                kpiBadge.style.padding = '4px 8px';
-                kpiBadge.style.borderRadius = '4px';
-                kpiBadge.style.fontSize = '14px';
-                kpiBadge.style.fontWeight = 'bold';
-                kpiBadge.textContent = customer.kpi || 'N/A';
-                
-                badgesDiv.appendChild(periodBadge);
-                badgesDiv.appendChild(kpiBadge);
-                
-                // Reason
-                const reasonDiv = document.createElement('div');
-                reasonDiv.style.color = '#34495e';
-                reasonDiv.style.lineHeight = '1.6';
-                reasonDiv.textContent = customer.reason;
-                
-                customerDiv.appendChild(nameDiv);
-                customerDiv.appendChild(badgesDiv);
-                customerDiv.appendChild(reasonDiv);
-                customerListElement.appendChild(customerDiv);
-            });
-        }
-        
-        // Update date
-        if (bannerData && bannerData.updateDate) {
-            const lastUpdatedElement = document.getElementById('last-updated');
-            lastUpdatedElement.textContent = `Last Updated: ${bannerData.updateDate}`;
-        }
-    }
 
-    // Update banner content when page loads
-    document.addEventListener('DOMContentLoaded', updateBannerContent);
-
-    // Subscription form handler
-    document.getElementById('subscription-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const email = document.getElementById('email-input').value;
-        const messageDiv = document.getElementById('subscription-message');
-        
-        // In a real implementation, you would send this to a server
-        // For now, we'll just show a success message
-        messageDiv.textContent = `Thank you! We'll notify ${email} when data is available.`;
-        messageDiv.style.color = '#28a745';
-        messageDiv.style.display = 'block';
-        
-        // Clear the input
-        document.getElementById('email-input').value = '';
-    });
-</script>
+        updateBannerContent();
+    </script>
 </body>
 </html> 
